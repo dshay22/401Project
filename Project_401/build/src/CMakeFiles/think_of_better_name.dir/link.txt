@@ -1,0 +1,2 @@
+/usr/bin/ar qc libthink_of_better_name.a CMakeFiles/think_of_better_name.dir/other_file.c.o
+/usr/bin/ranlib libthink_of_better_name.a
