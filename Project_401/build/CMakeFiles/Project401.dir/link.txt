@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/Project401.dir/src/hello_world.c.o -o Project401  src/libthink_of_better_name.a 
