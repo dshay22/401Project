@@ -52,42 +52,50 @@ void shuffle_first_deck(card x[108]) { // shuffles the deck when called
   }
 }
 
-void deal_card_to_player(card deck[108], card **head, card **tail, int *indexLastCard) { // deals a single card to a player when called
+void deal_card_to_player(card deck[108], card **head, int *indexLastCard) {
+    if (*indexLastCard >= 108) {
+        // Deck is empty, handle appropriately
+        return;
+    }
 
-  card *newCard;
-  newCard = (card *)malloc(sizeof(card));
+    card *newCard = (card *)malloc(sizeof(card));
+    if (newCard == NULL) {
+        // Error handling for memory allocation failure
+        fprintf(stderr, "Memory allocation failed\n");
+        return;
+    }
 
-  if (deck[108].value == '\0') {
-    suffle_remaining_decks(deck);
-  }
-  strcpy(newCard->action, deck[*indexLastCard].action);
-  strcpy(newCard->color, deck[*indexLastCard].color);
-  newCard->value = deck[*indexLastCard].value;
-  newCard->pt = '\0';
+    strncpy(newCard->action, deck[*indexLastCard].action, sizeof(newCard->action) - 1);
+    newCard->action[sizeof(newCard->action) - 1] = '\0'; // Ensure null-termination
+    strncpy(newCard->color, deck[*indexLastCard].color, sizeof(newCard->color) - 1);
+    newCard->color[sizeof(newCard->color) - 1] = '\0'; // Ensure null-termination
+    newCard->value = deck[*indexLastCard].value;
+    newCard->pt = NULL;
 
-  if (*head == NULL) {
-    *head = newCard;
-    *tail = newCard;
-  }
+    if (*head == NULL) {
+        *head = newCard;
+    } else {
+        // Traverse to the end of the list
+        card *current = *head;
+        while (current->pt != NULL) {
+            current = current->pt;
+        }
+        current->pt = newCard;
+    }
 
-  else {
-    (*tail)->pt = newCard;
-  }
+    deck[*indexLastCard].value = '\0';
+    deck[*indexLastCard].action[0] = '\0';
+    deck[*indexLastCard].color[0] = '\0';
 
-  *tail = newCard;
-
-  deck[*indexLastCard].value = '\0';
-  deck[*indexLastCard].action[0] = '\0';
-  deck[*indexLastCard].color[0] = '\0';
-
-  (*indexLastCard)++; // keeps track of the spot where the last card was dealt
+    (*indexLastCard)++; // Increment index for next deal
 }
+
 // // this is our most complicated fucntion the main point of the function is to
 // // remouve a card from a players hand this function also copies that remouved
 // // card so we can keep the memory and assigns it to the discarded variable this
 // // function also calls a check function which determines weather the players
 // // selected card can be played or not
-bool play_a_card(card deck[108], card **head, card **tail, card *discarded, int pickedCard, int currentTotalCards, int *turnCount, char changedColor[7]) {
+bool play_a_card(card deck[108], card **head, card *discarded, int pickedCard, int *turnCount, char changedColor[7]) {
   card *preTarget = *head;
 
   card *temp = *head; // these variebles create many copies of head which we will change later to the card the player wants to discard or play
@@ -133,36 +141,18 @@ bool play_a_card(card deck[108], card **head, card **tail, card *discarded, int 
     strcpy(discarded->action, cardPlayed.action);
 
     strcpy(changedColor, discarded->color); //  the previous color is now the new played color
-    
-    // these next lines remouve a card no matter wher is is in the list
-    if (pickedCard < currentTotalCards && pickedCard > 2) {
-      for (int i = 0; i < pickedCard + 1; i++) {
-        temp = temp->pt;
-      }
-      for (int i = 1; i < pickedCard - 2; ++i) { // removes card 2-end of list
-        temp1 = temp1->pt;
-      }
-      temp1->pt->pt = temp;
-    }
-    else if (pickedCard == 1 && currentTotalCards == 1) {
-      return true;
-    } 
-    else if (pickedCard == 1) {
-      (*head) = temp->pt;
-      (*head)->pt = temp->pt->pt; // removes fist card
 
-    } 
-    else if (pickedCard == 2) {
-      (*head)->pt = temp->pt->pt; // removes secon card
-
-    }
-
-    else if (pickedCard == currentTotalCards) {
-      for (int i = 1; i < pickedCard - 2; i++) { // middle cards reconects cards
-        temp = temp->pt;
-      }
-      (*tail)->pt = temp;
-      temp->pt->pt = '\0';
+    if (pickedCard == 1) {
+        // Remove the first card
+        *head = temp->pt;
+        free(temp);
+    } else {
+        for (int i = 1; i < pickedCard - 1; ++i) {
+            temp1 = temp1->pt;
+        }
+        temp = temp1->pt;
+        temp1->pt = temp->pt;
+        free(temp);
     }
 
     thisFunction = true; //  then true is returned becauyse the card can be played

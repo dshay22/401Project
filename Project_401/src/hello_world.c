@@ -65,10 +65,10 @@ int main() {
 
         if (dealCards != '\0') {
             for (int i = 0; i < totalCardsPlayerHand1; i++) {
-                deal_card_to_player(deck, &headCard1, &tailCard1, &index);
+                deal_card_to_player(deck, &headCard1, &index);
             } // Deals cards to 2 players
             for (int i = 0; i < totalCardsPlayerHand2; i++) {
-                deal_card_to_player(deck, &headCard2, &tailCard2, &index);
+                deal_card_to_player(deck, &headCard2, &index);
             }
         }
 
@@ -105,14 +105,14 @@ int main() {
 
                     if (targetCard == 0) { // if player has no playable cards then pressing zero means they can draw a card
                         printf("Discard Pile: %s %d\n", discarded.color, discarded.value);
-                        deal_card_to_player(deck, &headCard1, &tailCard1, &index); // call function to draw a single card from the deck
+                        deal_card_to_player(deck, &headCard1, &index); // call function to draw a single card from the deck
                         printf("Player 1 hand: ");
-                        //IntNode_PrintNodeData(headCard1); // after card is drawn this reprints the hand for redability
+                        IntNode_PrintNodeData(headCard1); // after card is drawn this reprints the hand for redability
                         printf("\n");
                         totalCardsPlayerHand1 += 1; // counter to ensure the hand total is correct in this case the total increases by one
                     } 
                     else {
-                        x = play_a_card(deck, &headCard1, &tailCard1, &discarded, targetCard, totalCardsPlayerHand1, &turnCount, changedColor); // function to check is card can be played
+                        x = play_a_card(deck, &headCard1, &discarded, targetCard, &turnCount, changedColor); // function to check is card can be played
                     }
                     //x = true; //DELET LINE
                 }
@@ -149,7 +149,7 @@ int main() {
                     printf("Player one chose a the new color %s\n", changedColor);
 
                     for (int i = 0; i < 4; i++) {
-                        deal_card_to_player(deck, &headCard2, &tailCard2, &index); // deals four cards to other player
+                        deal_card_to_player(deck, &headCard2, &index); // deals four cards to other player
                     }
 
                     canPlayer2Play = false; // skips otherplayers turn
@@ -158,7 +158,7 @@ int main() {
                 else if (strcmp(discarded.action, "Draw-Two") == 0) {
                     for (int i = 0; i < 2; i++) {
 
-                        deal_card_to_player(deck, &headCard2, &tailCard2, &index); // draw two card for the other player.
+                        deal_card_to_player(deck, &headCard2, &index); // draw two card for the other player.
                     }
                     canPlayer2Play = false; // skips other player turn by setting there condition to false
                     totalCardsPlayerHand2 = totalCardsPlayerHand2 + 2;
@@ -195,13 +195,13 @@ int main() {
 
                     if (targetCard == 0) {
                     printf("Discard Pile: %s %d\n", discarded.color, discarded.value);
-                    deal_card_to_player(deck, &headCard2, &tailCard2, &index);
+                    deal_card_to_player(deck, &headCard2, &index);
                     printf("Player 2 hand: ");
-                    //IntNode_PrintNodeData(headCard2);
+                    IntNode_PrintNodeData(headCard2);
                     printf("\n");
                     totalCardsPlayerHand2 += 1;
                     } else {
-                    x = play_a_card(deck, &headCard2, &tailCard2, &discarded, targetCard, totalCardsPlayerHand2, &turnCount, changedColor); // x iss set to true if the card can be played
+                    x = play_a_card(deck, &headCard2, &discarded, targetCard, &turnCount, changedColor); // x iss set to true if the card can be played
                     }
                 }
 
@@ -241,13 +241,13 @@ int main() {
                             changedColor);
                     for (int i = 0; i < 4; i++) {
 
-                    deal_card_to_player(deck, &headCard1, &tailCard1, &index);
+                    deal_card_to_player(deck, &headCard1, &index);
                     }
                     canPlayer1Play = false;
                     totalCardsPlayerHand1 = totalCardsPlayerHand1 + 4;
                 } else if (strcmp(discarded.action, "Draw-Two") == 0) {
                     for (int i = 0; i < 2; i++) {
-                    deal_card_to_player(deck, &headCard1, &tailCard1, &index);
+                    deal_card_to_player(deck, &headCard1, &index);
                     }
                     canPlayer1Play = false;
                     totalCardsPlayerHand1 = totalCardsPlayerHand1 + 2;
