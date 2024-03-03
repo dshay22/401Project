@@ -11,7 +11,7 @@ void helloFromAnotherFile() {
     printf("Hello from another file!\n");
 }
 
-void making_first_deck(FILE *inp, card x[25]) { // this fucntion scans the file and makes a deck
+void making_first_deck(FILE *inp, card x[]) { // this fucntion scans the file and makes a deck
     int i = 0;
 
     inp = fopen("/home/dorian/Documents/Spring 24/401 Software Security/Project_401/src/_OG_Deck.txt", "r");
